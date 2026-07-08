@@ -1,0 +1,60 @@
+import babelSource from 'babel-source';
+
+let Babel: any = null;
+
+function getBabel(): any {
+  if (!Babel) {
+    const mod = { exports: {} };
+    const fn = new Function('module', 'exports', babelSource);
+    fn(mod, mod.exports);
+    Babel = mod.exports;
+  }
+  return Babel;
+}
+
+export function transpile(code: string): string {
+  const b = getBabel();
+
+  const result = b.transform(code, {
+    presets: [
+      ['react', { runtime: 'classic' }],
+    ],
+    plugins: [
+      function exportDefaultPlugin(api: any) {
+        const types = api.types;
+        return {
+          visitor: {
+            ExportDefaultDeclaration(path: any) {
+              const decl = path.node.declaration;
+              const id = types.identifier('__COMPONENT__');
+
+              if (
+                decl.type === 'FunctionDeclaration' ||
+                decl.type === 'ClassDeclaration'
+              ) {
+                const name = decl.id || id;
+                path.replaceWithMultiple([
+                  decl,
+                  types.variableDeclaration('var', [
+                    types.variableDeclarator(id, name),
+                  ]),
+                ]);
+              } else {
+                path.replaceWith(
+                  types.variableDeclaration('var', [
+                    types.variableDeclarator(id, decl),
+                  ]),
+                );
+              }
+            },
+          },
+        };
+      },
+    ],
+    sourceType: 'module',
+  });
+
+  let output: string = result.code;
+  output = output.replace(/["']use strict["'];?\s*/g, '');
+  return output;
+}
