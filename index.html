@@ -8,22 +8,22 @@
 <body>
     <code-playground-react>
     <script type="text/plain">
-        import { useState } from 'react';
+      import { useState } from 'react';
 
-        function HelloWorld() {
-            const [count, setCount] = useState(0);
-            return (
-                <div style={{ textAlign: "center", padding: "20px" }}>
-                <h1>Hello, React!</h1>
-                <p>Count: {count}</p>
-                <button onClick={() => setCount(c => c + 1)}>
-                    Increment
-                </button>
-                </div>
-            );
-        }
+      function HelloWorld() {
+        const [count, setCount] = useState(0);
+        return (
+          <div style={{ textAlign: "center", padding: "20px" }}>
+          <h1>Hello, React!</h1>
+          <p>Count: {count}</p>
+          <button onClick={() => setCount(c => c + 1)}>
+            Increment
+          </button>
+          </div>
+        );
+      }
 
-        export default HelloWorld;
+      export default HelloWorld;
     </script>
     </code-playground-react>
 <script src="dist/code-playground-react.js"></script>
