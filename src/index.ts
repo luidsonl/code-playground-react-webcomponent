@@ -140,7 +140,7 @@ export default HelloWorld;`;
       const transpiled = transpile(raw);
       this.preview.execute(transpiled);
     } catch (err: unknown) {
-      console.warn('[code-playground-react] Transpile error:', err);
+      this.preview.showError(err instanceof Error ? err.message : String(err));
     }
   }
 }

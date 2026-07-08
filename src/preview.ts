@@ -40,6 +40,10 @@ export class Preview {
     }
   }
 
+  showError(message: string): void {
+    this.iframe.contentWindow?.postMessage({ type: 'error', message }, '*');
+  }
+
   execute(code: string): void {
     if (!this.ready) {
       this.pendingCode = code;

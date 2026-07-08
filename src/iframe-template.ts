@@ -15,8 +15,13 @@ export function createIframeHTML(reactCode: string, reactDOMCode: string): strin
     '<script>' + reactDOMCode + '</' + 'script>' +
     '<script>' +
     'window.addEventListener("message",function(e){' +
-      'if(e.data.type!=="execute")return;' +
       'var r=document.getElementById("root");' +
+      'if(e.data.type==="error"){' +
+        'if(window.__root__){window.__root__.unmount();window.__root__=null}' +
+        'r.innerHTML="<pre class=\\"error\\">"+e.data.message+"</pre>";' +
+        'return;' +
+      '}' +
+      'if(e.data.type!=="execute")return;' +
       'try{' +
         'if(window.__root__){window.__root__.unmount();window.__root__=null}' +
         'var f=new Function("React","ReactDOM",e.data.code+"\\nreturn __COMPONENT__;");' +
