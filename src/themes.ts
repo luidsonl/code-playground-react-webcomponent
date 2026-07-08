@@ -18,6 +18,24 @@ export interface ThemeColors {
     previewHeaderBg: string;
     previewHeaderText: string;
   };
+  syntax: {
+    keyword: string;
+    string: string;
+    number: string;
+    bool: string;
+    comment: string;
+    variable: string;
+    functionName: string;
+    typeName: string;
+    operator: string;
+    tagName: string;
+    attributeName: string;
+    propertyName: string;
+    self: string;
+    regexp: string;
+    bracket: string;
+    invalid: string;
+  };
 }
 
 export const themes: Record<string, ThemeColors> = {
@@ -41,6 +59,24 @@ export const themes: Record<string, ThemeColors> = {
       previewHeaderBg: '#f8f9fa',
       previewHeaderText: '#666666',
     },
+    syntax: {
+      keyword: '#c678dd',
+      string: '#98c379',
+      number: '#d19a66',
+      bool: '#d19a66',
+      comment: '#5c6370',
+      variable: '#e06c75',
+      functionName: '#61afef',
+      typeName: '#e5c07b',
+      operator: '#56b6c2',
+      tagName: '#e06c75',
+      attributeName: '#d19a66',
+      propertyName: '#e5c07b',
+      self: '#e06c75',
+      regexp: '#98c379',
+      bracket: '#abb2bf',
+      invalid: '#ff0000',
+    },
   },
   light: {
     editor: {
@@ -61,6 +97,24 @@ export const themes: Record<string, ThemeColors> = {
       previewBg: '#ffffff',
       previewHeaderBg: '#f6f8fa',
       previewHeaderText: '#586069',
+    },
+    syntax: {
+      keyword: '#d73a49',
+      string: '#032f62',
+      number: '#0550ae',
+      bool: '#0550ae',
+      comment: '#6a737d',
+      variable: '#e36209',
+      functionName: '#6f42c1',
+      typeName: '#22863a',
+      operator: '#d73a49',
+      tagName: '#22863a',
+      attributeName: '#6f42c1',
+      propertyName: '#0550ae',
+      self: '#e36209',
+      regexp: '#032f62',
+      bracket: '#24292e',
+      invalid: '#d73a49',
     },
   },
   dracula: {
@@ -83,6 +137,24 @@ export const themes: Record<string, ThemeColors> = {
       previewHeaderBg: '#f8f9fa',
       previewHeaderText: '#666666',
     },
+    syntax: {
+      keyword: '#ff79c6',
+      string: '#f1fa8c',
+      number: '#bd93f9',
+      bool: '#bd93f9',
+      comment: '#6272a4',
+      variable: '#50fa7b',
+      functionName: '#50fa7b',
+      typeName: '#8be9fd',
+      operator: '#ff79c6',
+      tagName: '#ff79c6',
+      attributeName: '#50fa7b',
+      propertyName: '#f8f8f2',
+      self: '#50fa7b',
+      regexp: '#f1fa8c',
+      bracket: '#f8f8f2',
+      invalid: '#ff5555',
+    },
   },
   nord: {
     editor: {
@@ -103,6 +175,24 @@ export const themes: Record<string, ThemeColors> = {
       previewBg: '#ffffff',
       previewHeaderBg: '#f8f9fa',
       previewHeaderText: '#666666',
+    },
+    syntax: {
+      keyword: '#81a1c1',
+      string: '#a3be8c',
+      number: '#b48ead',
+      bool: '#b48ead',
+      comment: '#4c566a',
+      variable: '#d8dee9',
+      functionName: '#88c0d0',
+      typeName: '#8fbcbb',
+      operator: '#81a1c1',
+      tagName: '#81a1c1',
+      attributeName: '#d08770',
+      propertyName: '#d8dee9',
+      self: '#d8dee9',
+      regexp: '#a3be8c',
+      bracket: '#d8dee9',
+      invalid: '#bf616a',
     },
   },
 };
