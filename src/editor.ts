@@ -1,6 +1,8 @@
 import { EditorView, basicSetup } from 'codemirror';
 import { javascript } from '@codemirror/lang-javascript';
 import { EditorState } from '@codemirror/state';
+import { keymap } from '@codemirror/view';
+import { indentWithTab } from '@codemirror/commands';
 
 export function createEditor(
   container: HTMLElement,
@@ -13,6 +15,7 @@ export function createEditor(
       extensions: [
         basicSetup,
         javascript({ jsx: true, typescript: true }),
+        keymap.of([indentWithTab]),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             onChange(update.state.doc.toString());
