@@ -1,7 +1,10 @@
-export const styles = `
+import { ThemeColors } from './themes';
+
+export function getStyles(theme: ThemeColors): string {
+  return `
 :host {
   display: block;
-  border: 1px solid #e2e8f0;
+  border: 1px solid ${theme.chrome.border};
   border-radius: 10px;
   overflow: hidden;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -18,9 +21,9 @@ export const styles = `
 
 .editor-panel {
   position: relative;
-  background: #1e1e1e;
+  background: ${theme.editor.background};
   overflow: hidden;
-  border-right: 1px solid #333;
+  border-right: 1px solid ${theme.chrome.border};
 }
 
 .editor-panel .cm-editor {
@@ -34,7 +37,7 @@ export const styles = `
 
 .preview-panel {
   position: relative;
-  background: #ffffff;
+  background: ${theme.chrome.previewBg};
   overflow: hidden;
 }
 
@@ -50,11 +53,11 @@ export const styles = `
   align-items: center;
   justify-content: space-between;
   padding: 6px 12px;
-  background: #252526;
-  color: #cccccc;
+  background: ${theme.chrome.toolbarBg};
+  color: ${theme.chrome.toolbarText};
   font-size: 12px;
   gap: 8px;
-  border-bottom: 1px solid #3c3c3c;
+  border-bottom: 1px solid ${theme.chrome.toolbarBorder};
 }
 
 .toolbar-label {
@@ -62,7 +65,8 @@ export const styles = `
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-size: 11px;
-  color: #888;
+  color: ${theme.chrome.toolbarText};
+  opacity: 0.6;
 }
 
 .toolbar-actions {
@@ -72,22 +76,19 @@ export const styles = `
 
 .toolbar button {
   background: none;
-  border: 1px solid #555;
-  color: #ccc;
+  border: 1px solid ${theme.chrome.toolbarText};
+  color: ${theme.chrome.toolbarText};
   padding: 3px 10px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 11px;
   font-family: inherit;
   transition: background 0.15s;
+  opacity: 0.7;
 }
 
 .toolbar button:hover {
-  background: #333;
-}
-
-.toolbar button:active {
-  background: #444;
+  opacity: 1;
 }
 
 .preview-header {
@@ -95,14 +96,15 @@ export const styles = `
   align-items: center;
   justify-content: space-between;
   padding: 6px 12px;
-  background: #f8f9fa;
-  color: #666;
+  background: ${theme.chrome.previewHeaderBg};
+  color: ${theme.chrome.previewHeaderText};
   font-size: 12px;
-  border-bottom: 1px solid #e8e8e8;
+  border-bottom: 1px solid ${theme.chrome.border};
 }
 
 .preview-header .toolbar-label {
-  color: #999;
+  color: ${theme.chrome.previewHeaderText};
+  opacity: 0.7;
 }
 
 @media (max-width: 767px) {
@@ -114,7 +116,7 @@ export const styles = `
 
   .editor-panel {
     border-right: none;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid ${theme.chrome.border};
   }
 }
 
@@ -132,3 +134,5 @@ export const styles = `
   word-break: break-word;
 }
 `;
+}
+

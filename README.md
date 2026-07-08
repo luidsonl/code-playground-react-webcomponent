@@ -111,7 +111,34 @@ export default Counter;`);
 | Atributo | Tipo | Padrão | Descrição |
 |----------|------|--------|-----------|
 | `code` | `string` | Código padrão (Hello World) | Código React/JSX a ser executado no preview. |
-| `theme` | `string` | — | Reservado para tema futuro. Atualmente sem efeito. |
+| `theme` | `string` | `dark` | Tema do editor. Valores: `dark`, `light`, `dracula`, `nord`. |
+
+### Temas
+
+O componente oferece 4 temas integrados:
+
+| Tema | Editor | Destaque |
+|------|--------|----------|
+| `dark` (padrão) | Fundo escuro `#1e1e1e` | Inspirado no One Dark, fácil para longas sessões |
+| `light` | Fundo claro `#ffffff` | Inspirado no GitHub, ideal para ambientes bem iluminados |
+| `dracula` | Fundo roxo escuro `#282a36` | Alto contraste, cores vibrantes |
+| `nord` | Fundo azul acinzentado `#2e3440` | Suave e agradável para leitura |
+
+```html
+<code-playground-react theme="nord">
+  <script type="text/plain">
+    ...código...
+  </script>
+</code-playground-react>
+```
+
+O tema pode ser alterado dinamicamente via `setAttribute`:
+
+```js
+el.setAttribute('theme', 'dracula');
+```
+
+Isso atualiza em tempo real o fundo do editor, gutter, toolbar e demais elementos do playground.
 
 Ordem de resolução do código:
 

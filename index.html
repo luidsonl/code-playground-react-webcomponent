@@ -6,7 +6,11 @@
     <title>Demo</title>
 </head>
 <body>
-  <code-playground-react>
+
+  <h2>Editor</h2>
+  <hr>
+  <h3>Script como conteúdo</h3>
+  <code-playground-react id="demo">
     <script type="text/plain">
       import { useState } from 'react';
 
@@ -27,23 +31,41 @@
     </script>
   </code-playground-react>
 
-  <code-playground-react code="
-    import { useState } from 'react';
-    function Greeting() {
-      const [name, setName] = useState('World');
-      return (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
-          <h1>Hello, {name}!</h1>
-          <input
-            value={name}
-            onChange={e => setName(e.target.value)}
-            placeholder='Type a name'
-          />
-        </div>
-      );
-    }
-    export default Greeting;
-  "></code-playground-react>
+  <h3>Atributo Code</h3>
+  <code-playground-react
+    code="
+      import { useState } from 'react';
+      function Greeting() {
+        const [name, setName] = useState('World');
+        return (
+          <div style={{ textAlign: 'center', padding: '20px' }}>
+            <h1>Hello, {name}!</h1>
+            <input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder='Type a name'
+            />
+          </div>
+        );
+      }
+      export default Greeting;
+    "
+  ></code-playground-react>
+  
+  <h2>Temas</h2>
+  <hr>
+  <h3>theme="dracula"</h3>
+  <code-playground-react theme="dracula">
+  </code-playground-react>
+  <h3>theme="dark"</h3>
+  <code-playground-react theme="dark">
+  </code-playground-react>
+  <h3>theme="light"</h3>
+  <code-playground-react theme="light">
+  </code-playground-react>
+  <h3>theme="nord"</h3>
+  <code-playground-react theme="nord">
+  </code-playground-react>
 
   <script src="dist/code-playground-react.js"></script>
 </body>

@@ -1,14 +1,17 @@
 import { createEditor } from './editor';
 import { transpile } from './transpiler';
 import { Preview } from './preview';
-import { styles } from './styles';
+import { getStyles } from './styles';
+import { getTheme, defaultTheme } from './themes';
 
 class CodePlaygroundReact extends HTMLElement {
   private shadow: ShadowRoot;
-  private editorView: ReturnType<typeof createEditor> | null = null;
+  private editorController: ReturnType<typeof createEditor> | null = null;
   private preview: Preview | null = null;
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
   private _code = '';
+  private styleTag: HTMLStyleElement | null = null;
+  private initialized = false;
 
   constructor() {
     super();
@@ -24,7 +27,7 @@ class CodePlaygroundReact extends HTMLElement {
       clearTimeout(this.debounceTimer);
     }
     this.preview?.destroy();
-    this.editorView?.destroy();
+    this.editorController?.view.destroy();
   }
 
   static get observedAttributes(): string[] {
@@ -34,10 +37,17 @@ class CodePlaygroundReact extends HTMLElement {
   attributeChangedCallback(name: string, _old: string | null, value: string | null): void {
     if (name === 'code' && value !== null && value !== this._code) {
       this._code = value;
-      if (this.editorView) {
-        this.editorView.dispatch({
-          changes: { from: 0, to: this.editorView.state.doc.length, insert: value },
+      if (this.editorController) {
+        this.editorController.view.dispatch({
+          changes: { from: 0, to: this.editorController.view.state.doc.length, insert: value },
         });
+      }
+    }
+    if (name === 'theme' && value !== null && this.initialized) {
+      const theme = getTheme(value);
+      this.editorController?.updateTheme(theme);
+      if (this.styleTag) {
+        this.styleTag.textContent = getStyles(theme);
       }
     }
   }
@@ -80,9 +90,11 @@ export default HelloWorld;`;
   }
 
   private render(): void {
-    const styleTag = document.createElement('style');
-    styleTag.textContent = styles;
-    this.shadow.appendChild(styleTag);
+    const theme = getTheme(this.getAttribute('theme') ?? undefined);
+
+    this.styleTag = document.createElement('style');
+    this.styleTag.textContent = getStyles(theme);
+    this.shadow.appendChild(this.styleTag);
 
     const wrapper = document.createElement('div');
     wrapper.className = 'playground';
@@ -120,14 +132,16 @@ export default HelloWorld;`;
 
       this.preview = new Preview(previewBody);
 
-      this.editorView = createEditor(editorBody, code, (newCode: string) => {
+      this.editorController = createEditor(editorBody, code, (newCode: string) => {
         this._code = newCode;
         this.debouncedExecute(newCode);
-      });
+      }, theme);
 
       this.preview.waitReady().then(() => {
         this.executeCode(code);
       });
+
+      this.initialized = true;
     });
   }
 
