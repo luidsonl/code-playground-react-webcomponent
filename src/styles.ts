@@ -69,6 +69,18 @@ export function getStyles(theme: ThemeColors): string {
   opacity: 0.6;
 }
 
+.lang-badge {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: ${theme.chrome.toolbarText};
+  color: ${theme.chrome.toolbarBg};
+  opacity: 0.7;
+}
+
 .toolbar-actions {
   display: flex;
   gap: 6px;

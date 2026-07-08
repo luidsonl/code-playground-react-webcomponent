@@ -11,6 +11,7 @@ class CodePlaygroundReact extends HTMLElement {
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
   private _code = '';
   private _lang: Language = 'tsx';
+  private _langBadge: HTMLSpanElement | null = null;
   private styleTag: HTMLStyleElement | null = null;
   private initialized = false;
 
@@ -59,6 +60,7 @@ class CodePlaygroundReact extends HTMLElement {
     if (name === 'lang' && value !== null && this.initialized) {
       this._lang = this.parseLang(value);
       this.editorController?.updateLang(this._lang);
+      this.updateLangBadge();
     }
   }
 
@@ -71,22 +73,43 @@ class CodePlaygroundReact extends HTMLElement {
     if (template) return this.dedent(template.innerHTML);
     const text = this.textContent;
     if (text?.trim()) return this.dedent(text);
-    return `import { useState } from 'react';
 
-function HelloWorld() {
+    const lang = this.parseLang(this.getAttribute('lang'));
+    if (lang === 'jsx') {
+      return `import { useState } from 'react';
+
+function App() {
   const [count, setCount] = useState(0);
   return (
-    <div style={{ textAlign: "center", padding: "20px" }}>
-      <h1>Hello, React!</h1>
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <h1>JSX Counter</h1>
       <p>Count: {count}</p>
-      <button onClick={() => setCount(c => c + 1)}>
-        Increment
-      </button>
+      <button onClick={() => setCount(count + 1)}>+</button>
     </div>
   );
 }
 
-export default HelloWorld;`;
+export default App;`;
+    }
+
+    return `import { useState } from 'react';
+
+interface Props {
+  initial?: number;
+}
+
+function App({ initial = 0 }: Props) {
+  const [count, setCount] = useState<number>(initial);
+  return (
+    <div style={{ textAlign: 'center', padding: '20px' }}>
+      <h1>TSX Counter</h1>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>+</button>
+    </div>
+  );
+}
+
+export default App;`;
   }
 
   private dedent(code: string): string {
@@ -117,6 +140,9 @@ export default HelloWorld;`;
     const editorToolbar = document.createElement('div');
     editorToolbar.className = 'toolbar';
     editorToolbar.innerHTML = '<span class="toolbar-label">Editor</span>';
+    this._langBadge = document.createElement('span');
+    this._langBadge.className = 'lang-badge';
+    editorToolbar.appendChild(this._langBadge);
     editorContainer.appendChild(editorToolbar);
 
     const editorBody = document.createElement('div');
@@ -144,6 +170,7 @@ export default HelloWorld;`;
 
       const lang = this.parseLang(this.getAttribute('lang'));
       this._lang = lang;
+      this.updateLangBadge();
 
       this.editorController = createEditor(editorBody, code, (newCode: string) => {
         this._code = newCode;
@@ -163,6 +190,12 @@ export default HelloWorld;`;
     this.debounceTimer = setTimeout(() => {
       this.executeCode(code);
     }, 400);
+  }
+
+  private updateLangBadge(): void {
+    if (this._langBadge) {
+      this._langBadge.textContent = this._lang;
+    }
   }
 
   private executeCode(raw: string): void {

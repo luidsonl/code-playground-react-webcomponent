@@ -17,12 +17,11 @@
     import { useState } from 'react';
 
     function App() {
-    const [count, setCount] = useState(0);
+    const [name, setName] = useState('World');
     return (
       <div style={{ textAlign: 'center', padding: '20px' }}>
-      <h1>Contador</h1>
-      <p>{count}</p>
-      <button onClick={() => setCount(c => c + 1)}>+</button>
+      <h1>Hello, {name}!</h1>
+      <input value={name} onChange={e => setName(e.target.value)} />
       </div>
     );
     }
@@ -39,18 +38,16 @@
     import { useState } from 'react';
 
     function App() {
-        const [count, setCount] = useState(0);
-        return (
-            <div style={{ textAlign: 'center', padding: '20px' }}>
-            <h1>Contador</h1>
-            <p>{count}</p>
-            <button onClick={() => setCount(c => c + 1)}>+</button>
-            </div>
-        );
+    const [name, setName] = useState('World');
+    return (
+      <div style={{ textAlign: 'center', padding: '20px' }}>
+      <h1>Hello, {name}!</h1>
+      <input value={name} onChange={e => setName(e.target.value)} />
+      </div>
+    );
     }
 
     export default App;
-
   "
 ></code-playground-react>
 
@@ -59,50 +56,14 @@
 <h2>Linguagens</h2>
 
 <h3><code>lang=&quot;jsx&quot;</code></h3>
-<small>JavaScript + JSX. Sem TypeScript.</small>
+<small>JavaScript + JSX. Usa o código default JSX.</small>
 
-<code-playground-react lang="jsx"
-  code="
-    import { useState } from 'react';
-
-    function App() {
-        const [count, setCount] = useState(0);
-        return (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
-        <h1>JSX Counter</h1>
-        <p>{count}</p>
-        <button onClick={() => setCount(count + 1)}>+</button>
-        </div>
-        );
-    }
-
-    export default App;
-  "
-></code-playground-react>
+<code-playground-react lang="jsx"></code-playground-react>
 
 <h3><code>lang=&quot;tsx&quot;</code></h3>
-<small>TypeScript + JSX. Suporta interfaces, type annotations, etc.</small>
+<small>TypeScript + JSX. Usa o código default TSX com interface e type annotation.</small>
 
-<code-playground-react lang="tsx"
-  code="
-    import { useState } from 'react';
-
-    interface Props { initial?: number }
-
-    function App({ initial = 0 }: Props) {
-        const [count, setCount] = useState<number>(initial);
-        return (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
-        <h1>TSX Counter</h1>
-        <p>{count}</p>
-        <button onClick={() => setCount(count + 1)}>+</button>
-        </div>
-        );
-    }
-
-    export default App;
-  "
-></code-playground-react>
+<code-playground-react lang="tsx"></code-playground-react>
 
 <hr>
 
@@ -110,84 +71,16 @@
 <small>Atributo <code>theme</code>: <code>dark</code> (padrão), <code>light</code>, <code>dracula</code>, <code>nord</code>.</small>
 
 <h3>theme=&quot;dark&quot;</h3>
-<code-playground-react theme="dark">
-  <script type="text/plain">
-    import { useState } from 'react';
-
-    function App() {
-        const [count, setCount] = useState(0);
-        return (
-            <div style={{ textAlign: 'center', padding: '20px' }}>
-            <h1>Dark</h1>
-            <p>{count}</p>
-            <button onClick={() => setCount(c => c + 1)}>+</button>
-            </div>
-        );
-    }
-
-    export default App;
-  </script>
-</code-playground-react>
+<code-playground-react theme="dark"></code-playground-react>
 
 <h3>theme=&quot;light&quot;</h3>
-<code-playground-react theme="light">
-  <script type="text/plain">
-    import { useState } from 'react';
-
-    function App() {
-    const [count, setCount] = useState(0);
-        return (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
-        <h1>Light</h1>
-        <p>{count}</p>
-        <button onClick={() => setCount(c => c + 1)}>+</button>
-        </div>
-        );
-    }
-
-    export default App;
-  </script>
-</code-playground-react>
+<code-playground-react theme="light"></code-playground-react>
 
 <h3>theme=&quot;dracula&quot;</h3>
-<code-playground-react theme="dracula">
-  <script type="text/plain">
-    import { useState } from 'react';
-
-    function App() {
-    const [count, setCount] = useState(0);
-        return (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
-        <h1>Dracula</h1>
-        <p>{count}</p>
-        <button onClick={() => setCount(c => c + 1)}>+</button>
-        </div>
-        );
-    }
-
-    export default App;
-  </script>
-</code-playground-react>
+<code-playground-react theme="dracula"></code-playground-react>
 
 <h3>theme=&quot;nord&quot;</h3>
-<code-playground-react theme="nord">
-  <script type="text/plain">
-    import { useState } from 'react';
-
-    function App() {
-    const [count, setCount] = useState(0);
-        return (
-        <div style={{ textAlign: 'center', padding: '20px' }}>
-        <h1>Nord</h1>
-        <p>{count}</p>
-        <button onClick={() => setCount(c => c + 1)}>+</button>
-        </div>
-        );
-    }
-
-    export default App;
-  </script>
-</code-playground-react>
+<code-playground-react theme="nord"></code-playground-react>
 
 <script src="dist/code-playground-react.js"></script>
 </body>
