@@ -45,12 +45,16 @@ class CodePlaygroundReact extends HTMLElement {
   private getInitialCode(): string {
     const attrCode = this.getAttribute('code');
     if (attrCode !== null) return attrCode;
+    const script = this.querySelector('script[type="text/plain"]');
+    if (script) return this.dedent(script.textContent || '');
     const template = this.querySelector('template');
     if (template) return this.dedent(template.innerHTML);
     const text = this.textContent;
     if (text?.trim()) return this.dedent(text);
-    return `function HelloWorld() {
-  const [count, setCount] = React.useState(0);
+    return `import { useState } from 'react';
+
+function HelloWorld() {
+  const [count, setCount] = useState(0);
   return (
     <div style={{ textAlign: "center", padding: "20px" }}>
       <h1>Hello, React!</h1>

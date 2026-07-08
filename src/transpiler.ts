@@ -20,6 +20,56 @@ export function transpile(code: string): string {
       ['react', { runtime: 'classic' }],
     ],
     plugins: [
+      function reactImportRewriter(api: any) {
+        const t = api.types;
+        return {
+          visitor: {
+            ImportDeclaration(path: any) {
+              if (path.node.source.value !== 'react') return;
+
+              const specifiers = path.node.specifiers;
+              if (specifiers.length === 0) {
+                path.remove();
+                return;
+              }
+
+              const namedSpecifiers = specifiers.filter(
+                (s: any) => s.type === 'ImportSpecifier'
+              );
+
+              const defaultSpecifier = specifiers.find(
+                (s: any) => s.type === 'ImportDefaultSpecifier'
+              );
+
+              const namespaceSpecifier = specifiers.find(
+                (s: any) => s.type === 'ImportNamespaceSpecifier'
+              );
+
+              if (namedSpecifiers.length > 0) {
+                const properties = namedSpecifiers.map((s: any) =>
+                  t.objectProperty(
+                    t.identifier(s.imported.name),
+                    t.identifier(s.local.name),
+                    false,
+                    true
+                  )
+                );
+
+                path.replaceWith(
+                  t.variableDeclaration('const', [
+                    t.variableDeclarator(
+                      t.objectPattern(properties),
+                      t.identifier('React')
+                    ),
+                  ])
+                );
+              } else if (defaultSpecifier || namespaceSpecifier) {
+                path.remove();
+              }
+            },
+          },
+        };
+      },
       function exportDefaultPlugin(api: any) {
         const types = api.types;
         return {
