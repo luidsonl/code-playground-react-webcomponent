@@ -112,6 +112,7 @@ export default Counter;`);
 |----------|------|--------|-----------|
 | `code` | `string` | Código padrão (Hello World) | Código React/JSX a ser executado no preview. |
 | `theme` | `string` | `dark` | Tema do editor. Valores: `dark`, `light`, `dracula`, `nord`. |
+| `lang` | `string` | `tsx` | Modo de linguagem do editor. Valores: `jsx`, `tsx`. |
 
 ### Temas
 

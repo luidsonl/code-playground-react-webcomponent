@@ -12,13 +12,16 @@ function getBabel(): any {
   return Babel;
 }
 
-export function transpile(code: string): string {
+export function transpile(code: string, lang?: string): string {
   const b = getBabel();
 
+  const isTsx = lang === 'tsx';
+  const presets: any[] = [['react', { runtime: 'classic' }]];
+  if (isTsx) presets.push(['typescript']);
+
   const result = b.transform(code, {
-    presets: [
-      ['react', { runtime: 'classic' }],
-    ],
+    filename: isTsx ? 'file.tsx' : 'file.jsx',
+    presets,
     plugins: [
       function reactImportRewriter(api: any) {
         const t = api.types;

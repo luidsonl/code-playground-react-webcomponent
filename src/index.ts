@@ -1,4 +1,4 @@
-import { createEditor } from './editor';
+import { createEditor, Language } from './editor';
 import { transpile } from './transpiler';
 import { Preview } from './preview';
 import { getStyles } from './styles';
@@ -10,6 +10,7 @@ class CodePlaygroundReact extends HTMLElement {
   private preview: Preview | null = null;
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
   private _code = '';
+  private _lang: Language = 'tsx';
   private styleTag: HTMLStyleElement | null = null;
   private initialized = false;
 
@@ -31,7 +32,12 @@ class CodePlaygroundReact extends HTMLElement {
   }
 
   static get observedAttributes(): string[] {
-    return ['code', 'theme'];
+    return ['code', 'theme', 'lang'];
+  }
+
+  private parseLang(value: string | null): Language {
+    const langs: Record<string, Language> = { jsx: 'jsx', tsx: 'tsx' };
+    return langs[value ?? ''] || 'tsx';
   }
 
   attributeChangedCallback(name: string, _old: string | null, value: string | null): void {
@@ -49,6 +55,10 @@ class CodePlaygroundReact extends HTMLElement {
       if (this.styleTag) {
         this.styleTag.textContent = getStyles(theme);
       }
+    }
+    if (name === 'lang' && value !== null && this.initialized) {
+      this._lang = this.parseLang(value);
+      this.editorController?.updateLang(this._lang);
     }
   }
 
@@ -132,10 +142,13 @@ export default HelloWorld;`;
 
       this.preview = new Preview(previewBody);
 
+      const lang = this.parseLang(this.getAttribute('lang'));
+      this._lang = lang;
+
       this.editorController = createEditor(editorBody, code, (newCode: string) => {
         this._code = newCode;
         this.debouncedExecute(newCode);
-      }, theme);
+      }, theme, lang);
 
       this.preview.waitReady().then(() => {
         this.executeCode(code);
@@ -155,7 +168,7 @@ export default HelloWorld;`;
   private executeCode(raw: string): void {
     if (!this.preview) return;
     try {
-      const transpiled = transpile(raw);
+      const transpiled = transpile(raw, this._lang);
       this.preview.execute(transpiled);
     } catch (err: unknown) {
       this.preview.showError(err instanceof Error ? err.message : String(err));

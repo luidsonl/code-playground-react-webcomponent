@@ -105,20 +105,37 @@ function createThemeExt(theme: ThemeColors) {
   ];
 }
 
+export type Language = 'jsx' | 'tsx';
+
+const defaultLanguage: Language = 'tsx';
+
+function getLangConfig(lang: Language) {
+  switch (lang) {
+    case 'jsx': return { jsx: true };
+    case 'tsx': return { jsx: true, typescript: true };
+  }
+}
+
 export function createEditor(
   container: HTMLElement,
   code: string,
   onChange: (code: string) => void,
-  theme: ThemeColors
-): { view: EditorView; updateTheme: (theme: ThemeColors) => void } {
+  theme: ThemeColors,
+  lang: Language = defaultLanguage,
+): {
+  view: EditorView;
+  updateTheme: (theme: ThemeColors) => void;
+  updateLang: (lang: Language) => void;
+} {
   const themeCompartment = new Compartment();
+  const langCompartment = new Compartment();
 
   const view = new EditorView({
     state: EditorState.create({
       doc: code,
       extensions: [
         basicSetup,
-        javascript({ jsx: true, typescript: true }),
+        langCompartment.of(javascript(getLangConfig(lang))),
         keymap.of([indentWithTab]),
         themeCompartment.of(createThemeExt(theme)),
         EditorView.updateListener.of((update) => {
@@ -136,6 +153,11 @@ export function createEditor(
     updateTheme: (newTheme: ThemeColors) => {
       view.dispatch({
         effects: themeCompartment.reconfigure(createThemeExt(newTheme)),
+      });
+    },
+    updateLang: (newLang: Language) => {
+      view.dispatch({
+        effects: langCompartment.reconfigure(javascript(getLangConfig(newLang))),
       });
     },
   };

@@ -9,7 +9,7 @@
 
   <h2>Editor</h2>
   <hr>
-  <h3>Script como conteúdo</h3>
+  <h3>TSX (padrão)</h3>
   <code-playground-react id="demo">
     <script type="text/plain">
       import { useState } from 'react';
@@ -30,6 +30,48 @@
       export default HelloWorld;
     </script>
   </code-playground-react>
+
+  <h3>JSX (lang="jsx")</h3>
+  <code-playground-react
+    lang="jsx"
+    code="
+      function sum(a, b) {
+        return a + b;
+      }
+
+      function App() {
+        const numbers = [1, 2, 3, 4, 5];
+        const total = numbers.reduce(sum, 0);
+        return (
+          <div style={{ padding: '20px' }}>
+            <h1>Sum: {total}</h1>
+          </div>
+        );
+      }
+      export default App;
+    "
+  ></code-playground-react>
+
+  <h3>TypeScript (lang="tsx")</h3>
+  <code-playground-react
+    lang="tsx"
+    code="
+      interface User {
+        name: string;
+        age: number;
+      }
+
+      function App() {
+        const user: User = { name: 'Alice', age: 30 };
+        return (
+          <div style={{ padding: '20px' }}>
+            <h1>{user.name} is {user.age} years old</h1>
+          </div>
+        );
+      }
+      export default App;
+    "
+  ></code-playground-react>
 
   <h3>Atributo Code</h3>
   <code-playground-react
