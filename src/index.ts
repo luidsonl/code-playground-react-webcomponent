@@ -44,7 +44,7 @@ class CodePlaygroundReact extends HTMLElement {
 
   private getInitialCode(): string {
     const attrCode = this.getAttribute('code');
-    if (attrCode !== null) return attrCode;
+    if (attrCode !== null) return this.dedent(attrCode);
     const script = this.querySelector('script[type="text/plain"]');
     if (script) return this.dedent(script.textContent || '');
     const template = this.querySelector('template');

@@ -43,6 +43,17 @@ src/
 4. O código transpilado é enviado ao iframe via `postMessage`.
 5. Dentro do iframe, React e ReactDOM já estão carregados. O código é executado com `new Function()` e o componente exportado é renderizado via `ReactDOM.createRoot`.
 
+### Imports do React
+
+O playground suporta importar hooks do React diretamente:
+
+```tsx
+import { useState, useEffect } from 'react';
+```
+
+Isso é convertido pelo Babel para `const { useState, useEffect } = React;` automaticamente.  
+`import React from 'react'` e `import * as React from 'react'` são removidos (React já está no escopo).
+
 ### Preview isolado
 
 O preview roda em um iframe com `sandbox="allow-scripts allow-same-origin"`, garantindo isolamento. A comunicação com o componente pai é feita exclusivamente via `postMessage`.
@@ -63,21 +74,26 @@ O preview roda em um iframe com `sandbox="allow-scripts allow-same-origin"`, gar
 ></code-playground-react>
 ```
 
-Se o atributo `code` não for fornecido, o componente busca um `<template>` interno:
+Se o atributo `code` não for fornecido, o componente busca um `<script type="text/plain">` interno:
 
 ```html
 <code-playground-react>
-  <template>
-function Greeting() {
-  return <h1>Hello, World!</h1>;
-}
-export default Greeting;
-  </template>
+  <script type="text/plain">
+    import { useState } from 'react';
+
+    function Counter() {
+      const [count, setCount] = useState(0);
+      return <button onClick={() => setCount(c => c + 1)}>{count}</button>;
+    }
+    export default Counter;
+  </script>
 </code-playground-react>
 ```
 
-> O `<template>` é recomendado para código inline, pois o browser não tenta interpretar tags JSX como HTML.  
+> `<script type="text/plain">` é o método recomendado: o browser trata o conteúdo como texto puro, sem tentar parsear JSX como HTML.  
 > A indentação comum é automaticamente removida — você pode alinhar o código à estrutura HTML sem afetar o resultado.
+
+> **Não use `<template>`**: o browser parseia o conteúdo como HTML, corrompendo JSX com atributos como `onClick={...}` ou `style={{...}}`.
 
 ### 3. Controle via JavaScript
 
@@ -100,25 +116,27 @@ export default Counter;`);
 Ordem de resolução do código:
 
 1. Atributo `code`
-2. `<template>` interno
-3. `textContent` (fallback para conteúdo textual sem template)
+2. `<script type="text/plain">` interno
+3. `textContent`
 4. Código padrão (Hello World com contador)
 
-Tanto o `<template>` quanto o `textContent` passam por `dedent`: a indentação mínima comum entre as linhas é detectada e removida automaticamente, permitindo que o código seja indentado para alinhar com a estrutura HTML sem poluir o editor.
+Tanto `<script type="text/plain">` quanto `textContent` passam por `dedent`: a indentação mínima comum entre as linhas é detectada e removida automaticamente.
 
-### Preferência: `<template>`
+### Preferência: `<script type="text/plain">`
 
-Sempre que possível, use `<template>` em vez de `textContent` para passar código inline:
+Sempre use `<script type="text/plain">` em vez de `textContent`:
 
 ```html
-<!-- ✅ Correto: JSX protegido pelo template -->
+<!-- ✅ Correto: JSX preservado, suporta onClick, style etc -->
 <code-playground-react>
-  <template>
-function App() {
-  return <h1>Hi</h1>;
-}
-export default App;
-  </template>
+  <script type="text/plain">
+    import { useState } from 'react';
+    function App() {
+      const [n, setN] = useState(0);
+      return <button onClick={() => setN(n + 1)}>{n}</button>;
+    }
+    export default App;
+  </script>
 </code-playground-react>
 
 <!-- ❌ Não funciona: browser interpreta <h1> como HTML -->
@@ -133,7 +151,8 @@ export default App;
 ### Regras do código
 
 - O código deve conter um `export default` de um componente React (função ou classe).
-- React e ReactDOM são globais dentro do código — use `React.useState`, `React.createElement`, etc.
+- React e ReactDOM são globais dentro do código.
+- Imports do React (`import { useState } from 'react'`) são suportados.
 - JSX é suportado.
 
 ## Desenvolvimento

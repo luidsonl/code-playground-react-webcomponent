@@ -6,7 +6,7 @@
     <title>Demo</title>
 </head>
 <body>
-    <code-playground-react>
+  <code-playground-react>
     <script type="text/plain">
       import { useState } from 'react';
 
@@ -25,7 +25,26 @@
 
       export default HelloWorld;
     </script>
-    </code-playground-react>
-<script src="dist/code-playground-react.js"></script>
+  </code-playground-react>
+
+  <code-playground-react code="
+    import { useState } from 'react';
+    function Greeting() {
+      const [name, setName] = useState('World');
+      return (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <h1>Hello, {name}!</h1>
+          <input
+            value={name}
+            onChange={e => setName(e.target.value)}
+            placeholder='Type a name'
+          />
+        </div>
+      );
+    }
+    export default Greeting;
+  "></code-playground-react>
+
+  <script src="dist/code-playground-react.js"></script>
 </body>
 </html>
