@@ -45,8 +45,10 @@ class CodePlaygroundReact extends HTMLElement {
   private getInitialCode(): string {
     const attrCode = this.getAttribute('code');
     if (attrCode !== null) return attrCode;
-    const text = this.textContent?.trim();
-    if (text) return text;
+    const template = this.querySelector('template');
+    if (template) return this.dedent(template.innerHTML);
+    const text = this.textContent;
+    if (text?.trim()) return this.dedent(text);
     return `function HelloWorld() {
   const [count, setCount] = React.useState(0);
   return (
@@ -61,6 +63,16 @@ class CodePlaygroundReact extends HTMLElement {
 }
 
 export default HelloWorld;`;
+  }
+
+  private dedent(code: string): string {
+    const lines = code.split('\n');
+    if (lines.length === 0) return '';
+    const minIndent = lines
+      .filter(l => l.trim())
+      .reduce((min, l) => Math.min(min, l.search(/\S/)), Infinity);
+    if (minIndent === Infinity || minIndent === 0) return code.trim();
+    return lines.map(l => l.slice(minIndent)).join('\n').trim();
   }
 
   private render(): void {

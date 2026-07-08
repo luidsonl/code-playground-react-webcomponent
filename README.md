@@ -8,7 +8,7 @@ Web component that provides a live React code editor with real-time preview, bui
 |------|-------------|
 | `dist/code-playground-react.js` | Bundle principal (IIFE). Inclui todo o código do web component, CodeMirror, Babel, React e ReactDOM. |
 | `dist/code-playground-react.js.map` | Source map para debug. |
-| `dist/index.html` | Página de demonstração. Arquivo manual (não gerado pelo build). |
+| `index.html` | Página de demonstração. Arquivo manual (não gerado pelo build). |
 
 ## Arquitetura
 
@@ -63,16 +63,21 @@ O preview roda em um iframe com `sandbox="allow-scripts allow-same-origin"`, gar
 ></code-playground-react>
 ```
 
-Se o atributo `code` não for fornecido, o componente usa o conteúdo textual como fallback:
+Se o atributo `code` não for fornecido, o componente busca um `<template>` interno:
 
 ```html
 <code-playground-react>
-  function Greeting() {
-    return <h1>Hello, World!</h1>;
-  }
-  export default Greeting;
+  <template>
+function Greeting() {
+  return <h1>Hello, World!</h1>;
+}
+export default Greeting;
+  </template>
 </code-playground-react>
 ```
+
+> O `<template>` é recomendado para código inline, pois o browser não tenta interpretar tags JSX como HTML.  
+> A indentação comum é automaticamente removida — você pode alinhar o código à estrutura HTML sem afetar o resultado.
 
 ### 3. Controle via JavaScript
 
@@ -83,6 +88,46 @@ el.setAttribute('code', `function Counter() {
   return <h2>{count}</h2>;
 }
 export default Counter;`);
+```
+
+### Atributos (parâmetros)
+
+| Atributo | Tipo | Padrão | Descrição |
+|----------|------|--------|-----------|
+| `code` | `string` | Código padrão (Hello World) | Código React/JSX a ser executado no preview. |
+| `theme` | `string` | — | Reservado para tema futuro. Atualmente sem efeito. |
+
+Ordem de resolução do código:
+
+1. Atributo `code`
+2. `<template>` interno
+3. `textContent` (fallback para conteúdo textual sem template)
+4. Código padrão (Hello World com contador)
+
+Tanto o `<template>` quanto o `textContent` passam por `dedent`: a indentação mínima comum entre as linhas é detectada e removida automaticamente, permitindo que o código seja indentado para alinhar com a estrutura HTML sem poluir o editor.
+
+### Preferência: `<template>`
+
+Sempre que possível, use `<template>` em vez de `textContent` para passar código inline:
+
+```html
+<!-- ✅ Correto: JSX protegido pelo template -->
+<code-playground-react>
+  <template>
+function App() {
+  return <h1>Hi</h1>;
+}
+export default App;
+  </template>
+</code-playground-react>
+
+<!-- ❌ Não funciona: browser interpreta <h1> como HTML -->
+<code-playground-react>
+  function App() {
+    return <h1>Hi</h1>;
+  }
+  export default App;
+</code-playground-react>
 ```
 
 ### Regras do código
