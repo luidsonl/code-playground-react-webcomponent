@@ -113,6 +113,33 @@ export default Counter;`);
 | `code` | `string` | Código padrão (Hello World) | Código React/JSX a ser executado no preview. |
 | `theme` | `string` | `dark` | Tema do editor. Valores: `dark`, `light`, `dracula`, `nord`. |
 | `lang` | `string` | `tsx` | Modo de linguagem do editor. Valores: `jsx`, `tsx`. |
+| `height` | `string` | automático | Altura total do playground. Aceita número (interpretado como `px`) ou unidade CSS (`px`, `rem`, `em`, `vh`, `vw`, `%`). |
+
+### Altura e scroll
+
+O atributo `height` define a altura fixa do elemento. Aceita um número — interpretado como pixels — ou uma unidade CSS:
+
+```html
+<code-playground-react height="500">
+  <script type="text/plain">
+    ...código...
+  </script>
+</code-playground-react>
+```
+
+```html
+<code-playground-react height="50vh"></code-playground-react>
+```
+
+Se omitido, o componente usa altura automática com altura mínima de `400px`.
+
+Quando o conteúdo (código ou resultado do preview) ultrapassa a altura definida, o scroll é ativado automaticamente **tanto no editor de código quanto no preview** — em vez de o playground crescer, cada painel ganha sua própria barra de rolagem.
+
+O atributo é reativo via `setAttribute`:
+
+```js
+el.setAttribute('height', '600px');
+```
 
 ### Temas
 

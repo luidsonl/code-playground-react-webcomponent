@@ -13,6 +13,8 @@ class CodePlaygroundReact extends HTMLElement {
   private _lang: Language = 'tsx';
   private _langBadge: HTMLSpanElement | null = null;
   private styleTag: HTMLStyleElement | null = null;
+  private playgroundEl: HTMLElement | null = null;
+  private _height: string | null = null;
   private initialized = false;
 
   constructor() {
@@ -33,12 +35,31 @@ class CodePlaygroundReact extends HTMLElement {
   }
 
   static get observedAttributes(): string[] {
-    return ['code', 'theme', 'lang'];
+    return ['code', 'theme', 'lang', 'height'];
   }
 
   private parseLang(value: string | null): Language {
     const langs: Record<string, Language> = { jsx: 'jsx', tsx: 'tsx' };
     return langs[value ?? ''] || 'tsx';
+  }
+
+  private parseHeight(value: string | null): string | null {
+    const v = (value ?? '').trim();
+    if (!v) return null;
+    if (/^\d+(\.\d+)?$/.test(v)) return `${v}px`;
+    if (/^\d+(\.\d+)?(px|rem|em|vh|vw|vmin|vmax|%)$/.test(v)) return v;
+    return null;
+  }
+
+  private applyHeight(): void {
+    if (!this.playgroundEl) return;
+    if (this._height) {
+      this.playgroundEl.style.height = this._height;
+      this.playgroundEl.style.minHeight = '0';
+    } else {
+      this.playgroundEl.style.height = '';
+      this.playgroundEl.style.minHeight = '';
+    }
   }
 
   attributeChangedCallback(name: string, _old: string | null, value: string | null): void {
@@ -61,6 +82,10 @@ class CodePlaygroundReact extends HTMLElement {
       this._lang = this.parseLang(value);
       this.editorController?.updateLang(this._lang);
       this.updateLangBadge();
+    }
+    if (name === 'height') {
+      this._height = this.parseHeight(value);
+      this.applyHeight();
     }
   }
 
@@ -131,7 +156,11 @@ export default App;`;
 
     const wrapper = document.createElement('div');
     wrapper.className = 'playground';
+    this.playgroundEl = wrapper;
     this.shadow.appendChild(wrapper);
+
+    this._height = this.parseHeight(this.getAttribute('height'));
+    this.applyHeight();
 
     const editorContainer = document.createElement('div');
     editorContainer.className = 'editor-panel';

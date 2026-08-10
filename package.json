@@ -1,6 +1,6 @@
 {
   "name": "code-playground-react",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Web component with live React code editor and preview",
   "type": "module",
   "main": "dist/code-playground-react.js",

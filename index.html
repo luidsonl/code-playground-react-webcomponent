@@ -53,6 +53,35 @@
 
 <hr>
 
+<h2>Altura e scroll</h2>
+<small>Atributo <code>height</code>: altura fixa do playground. Conteúdo que ultrapassar a altura ativa scroll no editor e no preview.</small>
+
+<h3>height=&quot;360px&quot;</h3>
+<code-playground-react height="360px">
+  <script type="text/plain">
+    import { useState } from 'react';
+
+    function TallList() {
+      const items = Array.from({ length: 40 }, (_, i) => `Item ${i + 1}`);
+      return (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <h1>Lista longa (40 itens)</h1>
+          <ul style={{ textAlign: 'left', maxWidth: '300px', margin: '0 auto' }}>
+            {items.map((item) => <li key={item}>{item}</li>)}
+          </ul>
+        </div>
+      );
+    }
+
+    export default TallList;
+  </script>
+</code-playground-react>
+
+<h3>height=&quot;500&quot; (número → px)</h3>
+<code-playground-react height="500"></code-playground-react>
+
+<hr>
+
 <h2>Linguagens</h2>
 
 <h3><code>lang=&quot;jsx&quot;</code></h3>
