@@ -11,6 +11,7 @@ class CodePlaygroundReact extends HTMLElement {
   private debounceTimer: ReturnType<typeof setTimeout> | null = null;
   private _code = '';
   private _lang: Language = 'tsx';
+  private _allowForms = true;
   private _langBadge: HTMLSpanElement | null = null;
   private styleTag: HTMLStyleElement | null = null;
   private playgroundEl: HTMLElement | null = null;
@@ -35,12 +36,25 @@ class CodePlaygroundReact extends HTMLElement {
   }
 
   static get observedAttributes(): string[] {
-    return ['code', 'theme', 'lang', 'height'];
+    return ['code', 'theme', 'lang', 'height', 'allow-forms'];
+  }
+
+  get allowForms(): boolean {
+    return this._allowForms;
+  }
+
+  set allowForms(value: boolean) {
+    this.setAttribute('allow-forms', value ? 'true' : 'false');
   }
 
   private parseLang(value: string | null): Language {
     const langs: Record<string, Language> = { jsx: 'jsx', tsx: 'tsx' };
     return langs[value ?? ''] || 'tsx';
+  }
+
+  private parseAllowForms(value: string | null): boolean {
+    if (value === null) return true;
+    return value !== 'false' && value !== '0';
   }
 
   private parseHeight(value: string | null): string | null {
@@ -86,6 +100,10 @@ class CodePlaygroundReact extends HTMLElement {
     if (name === 'height') {
       this._height = this.parseHeight(value);
       this.applyHeight();
+    }
+    if (name === 'allow-forms') {
+      this._allowForms = this.parseAllowForms(value);
+      this.preview?.setAllowForms(this._allowForms);
     }
   }
 
@@ -195,7 +213,8 @@ export default App;`;
       const code = this.getInitialCode();
       this._code = code;
 
-      this.preview = new Preview(previewBody);
+      this._allowForms = this.parseAllowForms(this.getAttribute('allow-forms'));
+      this.preview = new Preview(previewBody, { allowForms: this._allowForms });
 
       const lang = this.parseLang(this.getAttribute('lang'));
       this._lang = lang;

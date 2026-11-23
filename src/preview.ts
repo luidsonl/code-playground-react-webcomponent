@@ -3,15 +3,21 @@ import { createIframeHTML } from './iframe-template';
 import reactSource from 'react-source';
 import reactDOMSource from 'react-dom-source';
 
+export interface PreviewOptions {
+  allowForms?: boolean;
+}
+
 export class Preview {
   private iframe: HTMLIFrameElement;
   private ready = false;
   private pendingCode: string | null = null;
   private onReady: (() => void) | null = null;
+  private allowForms = false;
 
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, options: PreviewOptions = {}) {
+    this.allowForms = options.allowForms ?? false;
     this.iframe = document.createElement('iframe');
-    this.iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+    this.updateSandbox();
     this.iframe.style.width = '100%';
     this.iframe.style.height = '100%';
     this.iframe.style.border = 'none';
@@ -24,6 +30,18 @@ export class Preview {
 
     this.handleMessage = this.handleMessage.bind(this);
     window.addEventListener('message', this.handleMessage);
+  }
+
+  private updateSandbox(): void {
+    const flags = ['allow-scripts', 'allow-same-origin'];
+    if (this.allowForms) flags.push('allow-forms');
+    this.iframe.setAttribute('sandbox', flags.join(' '));
+  }
+
+  setAllowForms(allow: boolean): void {
+    if (this.allowForms === allow) return;
+    this.allowForms = allow;
+    this.updateSandbox();
   }
 
   private handleMessage(event: MessageEvent): void {

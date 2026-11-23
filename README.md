@@ -56,7 +56,7 @@ Isso é convertido pelo Babel para `const { useState, useEffect } = React;` auto
 
 ### Preview isolado
 
-O preview roda em um iframe com `sandbox="allow-scripts allow-same-origin"`, garantindo isolamento. A comunicação com o componente pai é feita exclusivamente via `postMessage`.
+O preview roda em um iframe com `sandbox="allow-scripts allow-same-origin"` por padrão, garantindo isolamento. A comunicação com o componente pai é feita exclusivamente via `postMessage`. Quando `allow-forms` está ativo (padrão), o sandbox também inclui `allow-forms` para permitir envio de formulários no código do preview.
 
 ## Como usar
 
@@ -114,6 +114,7 @@ export default Counter;`);
 | `theme` | `string` | `dark` | Tema do editor. Valores: `dark`, `light`, `dracula`, `nord`. |
 | `lang` | `string` | `tsx` | Modo de linguagem do editor. Valores: `jsx`, `tsx`. |
 | `height` | `string` | automático | Altura total do playground. Aceita número (interpretado como `px`) ou unidade CSS (`px`, `rem`, `em`, `vh`, `vw`, `%`). |
+| `allow-forms` | `boolean` | `true` | Controla se o iframe do preview permite envio de formulários (`allow-forms` no sandbox). Use `allow-forms="false"` para bloquear. |
 
 ### Altura e scroll
 
